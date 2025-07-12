@@ -1,4 +1,4 @@
-import SendVerificationEmailForm from "@/components/SendVerificationEmailForm";
+import SendVerificationEmailForm from "@/components/auth/SendVerificationEmailForm";
 import {redirect} from "next/navigation";
 
 interface PageProps {

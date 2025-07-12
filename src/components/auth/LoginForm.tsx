@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import {useState} from "react";
 import {useRouter} from "next/navigation";
-import SignInOAuthButton from "@/components/SignInOAuthButton";
+import SignInOAuthButton from "@/components/auth/SignInOAuthButton";
 
 export const LoginForm = () => {
     const [isPending, setIsPending] = useState(false);
