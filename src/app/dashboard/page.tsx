@@ -1,8 +1,21 @@
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import Link from "next/link";
+import {headers} from "next/headers";
+import {auth} from "@/lib/auth";
+import {redirect} from "next/navigation";
 
-const Page = () => {
+const Page = async () => {
+    const headersList = await headers()
+
+    const session = await auth.api.getSession({
+        headers: headersList
+    });
+
+    if (!session) {
+        redirect("/auth/login");
+    }
+
     return (
         <div className="h-dvh flex flex-col">
             <div className="flex flex-col items-center justify-center p-5 gap-4">
