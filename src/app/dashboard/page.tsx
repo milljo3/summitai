@@ -15,7 +15,7 @@ const Page = async () => {
     }
 
     return (
-        <MeetingsPage />
+        <MeetingsPage username={session.user.name}/>
     );
 };
 

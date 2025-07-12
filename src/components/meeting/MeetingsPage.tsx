@@ -7,7 +7,11 @@ import {useMeetingsQuery} from "@/hooks/useMeetingsQuery";
 import {MeetingCard as MeetingCardType} from "@/types/meeting";
 import {MeetingCard as MeetingCardComponent} from "@/components/meeting/MeetingCard";
 
-const MeetingsPage = () => {
+interface MeetingCardProps {
+    username: string;
+}
+
+const MeetingsPage = ({username}: MeetingCardProps) => {
 
     const {data, isLoading, error} = useMeetingsQuery();
 
@@ -15,7 +19,7 @@ const MeetingsPage = () => {
         <div className="h-dvh flex flex-col">
             <div className="flex flex-col items-center justify-center p-5 gap-4">
                 <div className="flex flex-col items-center justify-center p-5">
-                    <h1 className="text-lg">Welcome User!</h1>
+                    <h1 className="text-lg">Welcome {username}!</h1>
                     <p>Get started with your boards below!</p>
                 </div>
                 <hr className="max-w-sm w-full border-black" />
