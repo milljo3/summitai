@@ -26,8 +26,8 @@ const SignInOauthButton = ({provider, signUp}: SignInOauthButtonProps) => {
                 onResponse: () => {
                     setIsPending(false);
                 },
-                onError: (ctx) => {
-                    toast.error(ctx.error.message);
+                onError: () => {
+                    toast.error("Something went wrong. Please try again later.");
                 }
             }
         })
