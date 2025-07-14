@@ -1,7 +1,7 @@
 import {headers} from "next/headers";
 import {auth} from "@/lib/auth";
 import {redirect} from "next/navigation";
-import MeetingsPage from "@/components/meetings/MeetingsPage";
+import DashboardPage from "@/components/meetings/DashboardPage";
 
 const Page = async () => {
     const headersList = await headers()
@@ -15,7 +15,7 @@ const Page = async () => {
     }
 
     return (
-        <MeetingsPage username={session.user.name}/>
+        <DashboardPage username={session.user.name}/>
     );
 };
 
