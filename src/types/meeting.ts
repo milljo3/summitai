@@ -1,19 +1,19 @@
 import { z } from "zod";
 import {MEETING_CARD_SUMMARY_MAX_LENGTH, TRANSCRIPT_MAX_LENGTH} from "@/consts/consts";
 
-export const meetingSchema = z.object({
-    id: z.string(),
-    title: z.string(),
-    transcript: z.string(),
-    sourceType: z.enum(["text", "pdf"]),
-    summary: z.string(),
-    actionItems: z.array(z.string()),
-    questions: z.array(z.string()),
-    decisions: z.array(z.string()),
-    tags: z.array(z.string()),
-    createdAt: z.date(),
-    updatedAt: z.date(),
-    userId: z.string(),
+export const responseActionSchema = z.object({
+    task: z.string().default("unknown"),
+    responsible: z.string().default("unknown"),
+    deadline: z.string().default("unknown"),
+});
+
+export const responseMeetingSummarySchema = z.object({
+    title: z.string().default("Untitled Meeting"),
+    summary: z.string().default("unknown"),
+    actions: z.array(responseActionSchema).default([]),
+    questions: z.array(z.string()).default([]),
+    decisions: z.array(z.string()).default([]),
+    tags: z.array(z.string()).default([]),
 });
 
 export const meetingCardSchema = z.object({
@@ -29,17 +29,17 @@ export const meetingCardsResponseSchema = z.object({
     meetings: z.array(meetingCardSchema),
 });
 
-export const responseMeetingSummarySchema = z.object({
-    title: z.string().default("Untitled Meeting"),
-    summary: z.string().default("unknown"),
-    actions: z.array(z.object({
-        task: z.string().default("unknown"),
-        responsible: z.string().default("unknown"),
-        deadline: z.string().default("unknown"),
-    })).default([]),
+
+export const actionSchema = responseActionSchema.extend({
+   id: z.string(),
+});
+
+export const meetingSchema = responseMeetingSummarySchema.extend({
     questions: z.array(z.string()).default([]),
     decisions: z.array(z.string()).default([]),
-    tags: z.array(z.string()).default([]),
+    actions: z.array(actionSchema).default([]),
+    createdAt: z.coerce.date(),
+    updatedAt: z.coerce.date(),
 });
 
 export const transcriptSchema = z.object({
@@ -64,7 +64,8 @@ export const pdfSchema = z.object({
         }),
 });
 
-export type Meeting = z.infer<typeof meetingSchema>;
+export type Action = z.infer<typeof actionSchema>
+export type Meeting = z.infer<typeof meetingSchema>
 export type MeetingCard = z.infer<typeof meetingCardSchema>;
 export type ResponseMeetingSummary = z.infer<typeof responseMeetingSummarySchema>;
 export type Transcript = z.infer<typeof transcriptSchema>;
