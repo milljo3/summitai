@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import {auth} from "@/lib/auth";
-import {MeetingCardsResponseSchema} from "@/types/meeting";
-
-const MEETING_CARD_SUMMARY_MAX_LENGTH = 50;
+import {meetingCardsResponseSchema} from "@/types/meeting";
+import {MEETING_CARD_SUMMARY_MAX_LENGTH} from "@/consts/consts";
 
 function truncateSummary(summary: string): string {
     if (summary.length <= MEETING_CARD_SUMMARY_MAX_LENGTH) return summary;
@@ -12,35 +11,42 @@ function truncateSummary(summary: string): string {
 
 export async function GET(req: NextRequest) {
     const headers = req.headers;
-    const session = await auth.api.getSession({ headers });
 
-    if (!session?.user) {
-        return NextResponse.json({ error: "Unauthorized", status: 401 });
-    }
+    try {
+        const session = await auth.api.getSession({ headers });
 
-    const meetings = await prisma.meeting.findMany({
-        where: { userId: session.user.id },
-        orderBy: { updatedAt: "desc" },
-        select: {
-            id: true,
-            title: true,
-            summary: true,
-            tags: true,
-            createdAt: true,
-            updatedAt: true
+        if (!session?.user) {
+            return NextResponse.json({ error: "Unauthorized", status: 401 });
         }
-    });
 
-    const meetingsUpdated = meetings.map((meeting) => ({
-        ...meeting,
-        summary: truncateSummary(meeting.summary),
-    }));
+        const meetings = await prisma.meeting.findMany({
+            where: { userId: session.user.id },
+            orderBy: { updatedAt: "desc" },
+            select: {
+                id: true,
+                title: true,
+                summary: true,
+                tags: true,
+                createdAt: true,
+                updatedAt: true
+            }
+        });
 
-    const result = MeetingCardsResponseSchema.safeParse({meetings: meetingsUpdated});
-    if (!result.success) {
-        console.error(result.error);
-        return NextResponse.json({ error: "Invalid data shape", status: 500 });
+        const meetingsUpdated = meetings.map((meeting) => ({
+            ...meeting,
+            summary: truncateSummary(meeting.summary),
+        }));
+
+        const parsed = meetingCardsResponseSchema.safeParse({meetings: meetingsUpdated});
+        if (!parsed.success) {
+            console.error(parsed.error);
+            return NextResponse.json({ error: "Invalid data shape", status: 500 });
+        }
+
+        return NextResponse.json(parsed.data);
     }
-
-    return NextResponse.json(result.data);
+    catch (error) {
+        console.error(error);
+        return NextResponse.json({ error: "Internal Server Error", status: 500 });
+    }
 }
