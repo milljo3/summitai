@@ -8,6 +8,7 @@ import {
     CollapsibleTrigger,
 } from "@/components/ui/collapsible"
 import {useState} from "react";
+import {Badge} from "@/components/ui/badge";
 
 interface MeetingCardProps {
     meetingCard: MeetingCardType;
@@ -25,7 +26,7 @@ export const MeetingCard = ({meetingCard}: MeetingCardProps) => {
         <Collapsible
             open={isOpen}
             onOpenChange={setIsOpen}
-            className="flex flex-col items-center p-5 gap-2 border-2 border-black w-[300px] h-64 overflow-y-auto rounded-md"
+            className="flex flex-col items-center px-5 py-3 gap-3 border-2 border-black w-[300px] h-64 overflow-y-auto rounded-md"
         >
             <Link
                 className="text-lg flex items-center justify-center gap-2 underline"
@@ -33,27 +34,25 @@ export const MeetingCard = ({meetingCard}: MeetingCardProps) => {
             >
                 {meetingCard.title} <ArrowUpRight />
             </Link>
-            <p>{meetingCard.summary}</p>
-            <div className="flex flex-col gap-2">
+            <p className="text-sm">{meetingCard.summary}</p>
+            <div className="flex flex-col gap-2 flex-1">
                 <div className="flex flex-wrap gap-2">
                     {initialTags.map(tag => (
-                        <div
+                        <Badge
                             key={tag}
-                            className="flex items-center justify-center border-2 border-black bg-blue-300 rounded-md px-2"
                         >
                             <p>{tag}</p>
-                        </div>
+                        </Badge>
                     ))}
                 </div>
                 {remainingTags.length > 0 && (
                     <CollapsibleContent className="flex flex-wrap gap-2">
                         {remainingTags.map(tag => (
-                            <div
+                            <Badge
                                 key={tag}
-                                className="flex items-center justify-center border-2 border-black bg-blue-300 rounded-md px-2"
                             >
                                 <p>{tag}</p>
-                            </div>
+                            </Badge>
                         ))}
                     </CollapsibleContent>
                 )}
