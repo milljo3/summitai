@@ -10,7 +10,6 @@ import {useCreateMeetingSummaryPDF} from "@/hooks/useCreateMeetingSummaryPDF";
 import ReturnButton from "@/components/ReturnButton";
 
 const NewMeetingPage = () => {
-
     const createMeetingText = useCreateMeetingSummaryText();
     const createMeetingPDF = useCreateMeetingSummaryPDF();
 
@@ -22,7 +21,7 @@ const NewMeetingPage = () => {
         createMeetingPDF.mutate(pdf);
     }
 
-    if (createMeetingText.isPending || createMeetingPDF.isPending) {
+    if (createMeetingText.isPending || createMeetingPDF.isPending || createMeetingPDF.data || createMeetingText.data) {
         return (
             <div className="h-dvh flex flex-col gap-4 items-center justify-center">
                 <p className="text-lg">Generating your meeting summary...</p>
