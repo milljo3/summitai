@@ -1,4 +1,4 @@
-import {MeetingCard, MeetingCardsResponseSchema} from "@/types/meeting";
+import {MeetingCard, meetingCardsResponseSchema} from "@/types/meeting";
 
 export const fetchMeetings = async (): Promise<MeetingCard[]> => {
     const response = await fetch("/api/meetings");
@@ -6,7 +6,7 @@ export const fetchMeetings = async (): Promise<MeetingCard[]> => {
 
     const json = await response.json();
 
-    const result = MeetingCardsResponseSchema.safeParse(json);
+    const result = meetingCardsResponseSchema.safeParse(json);
 
     if (!result.success) {
         console.error("Failed to parse meetings", result.error);
