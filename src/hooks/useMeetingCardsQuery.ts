@@ -1,10 +1,10 @@
 import {useQuery} from "@tanstack/react-query";
-import {fetchMeetings} from "@/api/fetchMeetings";
+import {fetchMeetingCards} from "@/api/fetchMeetingCards";
 import {MeetingCard} from "@/types/meeting";
 
-export const useMeetingsQuery = () => {
+export const useMeetingCardsQuery = () => {
   return useQuery<MeetingCard[]>({
         queryKey: ["meetings"],
-        queryFn: () => fetchMeetings(),
+        queryFn: () => fetchMeetingCards(),
     });
 }

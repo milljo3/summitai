@@ -1,6 +1,6 @@
 import {MeetingCard, meetingCardsResponseSchema} from "@/types/meeting";
 
-export const fetchMeetings = async (): Promise<MeetingCard[]> => {
+export const fetchMeetingCards = async (): Promise<MeetingCard[]> => {
     const response = await fetch("/api/meetings");
     if (!response.ok) throw new Error("Failed to fetch meetings");
 

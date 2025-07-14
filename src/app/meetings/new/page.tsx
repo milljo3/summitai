@@ -1,4 +1,4 @@
-import NewMeetingPage from "@/components/meeting/new/NewMeetingPage";
+import NewMeetingPage from "@/components/meetings/new/NewMeetingPage";
 import {headers} from "next/headers";
 import {auth} from "@/lib/auth";
 import {redirect} from "next/navigation";

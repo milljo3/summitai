@@ -1,8 +1,8 @@
 "use client"
 
-import TextAreaForm from "@/components/meeting/new/TextAreaForm";
+import TextAreaForm from "@/components/meetings/new/TextAreaForm";
 import {Separator} from "@/components/ui/separator";
-import PDFForm from "@/components/meeting/new/PDFForm";
+import PDFForm from "@/components/meetings/new/PDFForm";
 import {PDF, Transcript} from "@/types/meeting";
 import {useCreateMeetingSummaryText} from "@/hooks/useCreateMeetingSummaryText";
 import {Loader2} from "lucide-react";

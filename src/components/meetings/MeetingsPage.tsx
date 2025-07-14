@@ -3,9 +3,9 @@
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import Link from "next/link";
-import {useMeetingsQuery} from "@/hooks/useMeetingsQuery";
+import {useMeetingCardsQuery} from "@/hooks/useMeetingCardsQuery";
 import {MeetingCard as MeetingCardType} from "@/types/meeting";
-import {MeetingCard as MeetingCardComponent} from "@/components/meeting/MeetingCard";
+import {MeetingCard as MeetingCardComponent} from "@/components/meetings/MeetingCard";
 import {Loader2} from "lucide-react";
 import {Separator} from "@/components/ui/separator";
 
@@ -15,7 +15,7 @@ interface MeetingCardProps {
 
 const MeetingsPage = ({username}: MeetingCardProps) => {
 
-    const {data, isLoading, error} = useMeetingsQuery();
+    const {data, isLoading, error} = useMeetingCardsQuery();
 
     return (
         <div className="h-dvh flex flex-col">
@@ -36,7 +36,7 @@ const MeetingsPage = ({username}: MeetingCardProps) => {
                             </div>
                         )}
                         <Button>
-                            <Link href="/new">+ New Meeting</Link>
+                            <Link href="/meetings/new">+ New Meeting</Link>
                         </Button>
                     </div>
                 )}
@@ -47,7 +47,7 @@ const MeetingsPage = ({username}: MeetingCardProps) => {
                         <div className="flex flex-col items-center justify-center p-5 gap-2">
                             <p>No meetings yet? Create one now!</p>
                             <Button>
-                                <Link href="/new">+ New Meeting</Link>
+                                <Link href="/meetings/new">+ New Meeting</Link>
                             </Button>
                         </div>
                     ) : (
