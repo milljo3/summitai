@@ -32,13 +32,18 @@ const NewMeetingPage = () => {
 
     return (
         <div className="h-dvh flex flex-col items-center justify-center gap-6">
+            <h1 className="text-2xl font-extrabold">Summarize a meeting transcript</h1>
+            <h2 className="font-bold text-2xl">Submit as text</h2>
             <TextAreaForm
                 onCreateMeetingSummary={handleCreateMeetingSummaryText}
                 isLoading={createMeetingText.isPending || createMeetingPDF.isPending}
             />
-            <div className="w-1/2">
-                <Separator className="w-full" />
+            <div className="w-1/2 flex items-center justify-center">
+                <Separator className="max-w-sm" />
+                <p>or</p>
+                <Separator className="max-w-sm" />
             </div>
+            <h2 className="font-bold text-2xl">Submit as PDF</h2>
             <PDFForm
                 onCreateMeetingSummary={handleCreateMeetingSummaryPDF}
                 isLoading={createMeetingText.isPending || createMeetingPDF.isPending}
