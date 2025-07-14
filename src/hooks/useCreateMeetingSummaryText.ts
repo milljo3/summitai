@@ -2,15 +2,15 @@ import {useRouter} from "next/navigation";
 import {useMutation, useQueryClient} from "@tanstack/react-query";
 import {Transcript} from "@/types/meeting";
 import {toast} from "sonner";
-import {createMeetingSummary} from "@/api/createMeetingSummary";
+import {createMeetingSummaryText} from "@/api/createMeetingSummaryText";
 
-export function useCreateMeetingSummary() {
+export function useCreateMeetingSummaryText() {
     const router = useRouter();
     const queryClient = useQueryClient();
 
     return useMutation({
         mutationFn: async (transcript: Transcript) => {
-            return await createMeetingSummary(transcript);
+            return await createMeetingSummaryText(transcript);
         },
         onSuccess: data => {
             if (!data || typeof data !== "string") {

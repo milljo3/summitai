@@ -2,20 +2,19 @@
 
 import TextAreaForm from "@/components/meeting/new/TextAreaForm";
 import {Separator} from "@/components/ui/separator";
-import PDFForm from "@/components/meeting/new/PDFForm";
 import {Transcript} from "@/types/meeting";
-import {useCreateMeetingSummary} from "@/hooks/useCreateMeetingSummary";
+import {useCreateMeetingSummaryText} from "@/hooks/useCreateMeetingSummaryText";
 import {Loader2} from "lucide-react";
 
 const NewMeetingPage = () => {
 
-    const createMeeting = useCreateMeetingSummary();
+    const createMeetingText = useCreateMeetingSummaryText();
 
     const handleCreateMeetingSummaryText = async (transcript: Transcript) => {
-        createMeeting.mutate(transcript);
+        createMeetingText.mutate(transcript);
     }
 
-    if (createMeeting.isPending) {
+    if (createMeetingText.isPending) {
         return (
             <div className="h-dvh flex flex-col gap-4 items-center justify-center">
                 <p className="text-lg">Generating your meeting summary...</p>
@@ -28,12 +27,11 @@ const NewMeetingPage = () => {
         <div className="h-dvh flex flex-col items-center justify-center gap-6">
             <TextAreaForm
                 onCreateMeetingSummary={handleCreateMeetingSummaryText}
-                isLoading={createMeeting.isPending}
+                isLoading={createMeetingText.isPending}
             />
             <div className="w-1/2">
                 <Separator className="w-full" />
             </div>
-            <PDFForm />
         </div>
     );
 };
