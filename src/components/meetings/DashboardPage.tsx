@@ -13,16 +13,16 @@ interface MeetingCardProps {
     username: string;
 }
 
-const MeetingsPage = ({username}: MeetingCardProps) => {
+const DashboardPage = ({username}: MeetingCardProps) => {
 
     const {data, isLoading, error} = useMeetingCardsQuery();
 
     return (
-        <div className="h-dvh flex flex-col">
+        <div className="h-dvh flex flex-col p-2">
             <div className="flex flex-col items-center justify-center p-5 gap-4">
                 <div className="flex flex-col items-center justify-center p-5">
                     <h1 className="text-lg">Welcome {username}!</h1>
-                    <p>Get started with your meetings below!</p>
+                    <p className="text-center">Get started with your meetings below!</p>
                 </div>
                 <div className="w-1/2 flex items-center justify-center">
                     <Separator className="max-w-sm w-full bg-black" />
@@ -41,7 +41,7 @@ const MeetingsPage = ({username}: MeetingCardProps) => {
                     </div>
                 )}
             </div>
-            <div className="flex flex-wrap justify-center gap-4">
+            <div className="flex flex-wrap justify-center gap-8 md:gap-4 pb-6">
                 {!isLoading ? (
                     data?.length === 0 ? (
                         <div className="flex flex-col items-center justify-center p-5 gap-2">
@@ -72,4 +72,4 @@ const MeetingsPage = ({username}: MeetingCardProps) => {
     );
 };
 
-export default MeetingsPage;
+export default DashboardPage;
