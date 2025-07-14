@@ -10,43 +10,41 @@ function truncateSummary(summary: string): string {
 }
 
 export async function GET(req: NextRequest) {
-    const headers = req.headers;
+     try {
+            const session = await auth.api.getSession({ headers: req.headers });
 
-    try {
-        const session = await auth.api.getSession({ headers });
-
-        if (!session?.user) {
-            return NextResponse.json({ error: "Unauthorized", status: 401 });
-        }
-
-        const meetings = await prisma.meeting.findMany({
-            where: { userId: session.user.id },
-            orderBy: { updatedAt: "desc" },
-            select: {
-                id: true,
-                title: true,
-                summary: true,
-                tags: true,
-                createdAt: true,
-                updatedAt: true
+            if (!session?.user) {
+                return NextResponse.json({ error: "Unauthorized", status: 401 });
             }
-        });
 
-        const meetingsUpdated = meetings.map((meeting) => ({
-            ...meeting,
-            summary: truncateSummary(meeting.summary),
-        }));
+            const meetings = await prisma.meeting.findMany({
+                where: { userId: session.user.id },
+                orderBy: { updatedAt: "desc" },
+                select: {
+                    id: true,
+                    title: true,
+                    summary: true,
+                    tags: true,
+                    createdAt: true,
+                    updatedAt: true
+                }
+            });
 
-        const parsed = meetingCardsResponseSchema.safeParse({meetings: meetingsUpdated});
-        if (!parsed.success) {
-            console.error(parsed.error);
-            return NextResponse.json({ error: "Invalid data shape", status: 500 });
+            const meetingsUpdated = meetings.map((meeting) => ({
+                ...meeting,
+                summary: truncateSummary(meeting.summary),
+            }));
+
+            const parsed = meetingCardsResponseSchema.safeParse({meetings: meetingsUpdated});
+            if (!parsed.success) {
+                console.error(parsed.error);
+                return NextResponse.json({ error: "Invalid data shape", status: 500 });
+            }
+
+            return NextResponse.json(parsed.data);
         }
-
-        return NextResponse.json(parsed.data);
-    }
-    catch (error) {
-        console.error(error);
-        return NextResponse.json({ error: "Internal Server Error", status: 500 });
-    }
+        catch (error) {
+            console.error(error);
+            return NextResponse.json({ error: "Internal Server Error", status: 500 });
+        }
 }
