@@ -1,5 +1,6 @@
 import {MeetingCard as MeetingCardType} from "@/types/meeting";
 import Link from "next/link";
+import {ArrowUpRight} from "lucide-react";
 
 interface MeetingCardProps {
     meetingCard: MeetingCardType;
@@ -7,11 +8,15 @@ interface MeetingCardProps {
 
 export const MeetingCard = ({meetingCard}: MeetingCardProps) => {
     return (
-        <Link
-            href={`/meetings/${meetingCard.id}`}
+        <div
             className="flex flex-col items-center p-5 gap-2 border-2 border-black w-[300px] h-64 overflow-y-auto rounded-md"
         >
-            <h1 className="text-lg">{meetingCard.title}</h1>
+            <Link
+                className="text-lg flex items-center justify-center gap-2 underline"
+                href={`/meetings/${meetingCard.id}`}
+            >
+                {meetingCard.title} <ArrowUpRight />
+            </Link>
             <p>{meetingCard.summary}</p>
             <div className="flex flex-wrap gap-2">
                 {meetingCard.tags.map(tag => (
@@ -23,6 +28,6 @@ export const MeetingCard = ({meetingCard}: MeetingCardProps) => {
                     </div>
                 ))}
             </div>
-        </Link>
+        </div>
     );
 };
