@@ -7,25 +7,29 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum SourceType {
-  text
-  pdf
+model Action {
+  id          String   @id @default(uuid())
+  task        String   @default("unknown")
+  responsible String   @default("unknown")
+  deadline    String   @default("unknown")
+  meeting     Meeting  @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  meetingId   String
+  createdAt   DateTime @default(now())
 }
 
 model Meeting {
-  id          String     @id @default(uuid())
-  title       String
-  transcript  String
-  sourceType  SourceType
-  summary     String
-  actionItems String[]
-  questions   String[]
-  decisions   String[]
-  tags        String[]   @default([])
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  userId      String
-  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id         String   @id @default(uuid())
+  title      String   @default("Untitled Meeting")
+  transcript String
+  summary    String   @default("unknown")
+  actions    Action[]
+  questions  String[]
+  decisions  String[]
+  tags       String[] @default([])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model User {
