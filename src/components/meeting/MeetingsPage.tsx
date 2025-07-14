@@ -22,7 +22,7 @@ const MeetingsPage = ({username}: MeetingCardProps) => {
             <div className="flex flex-col items-center justify-center p-5 gap-4">
                 <div className="flex flex-col items-center justify-center p-5">
                     <h1 className="text-lg">Welcome {username}!</h1>
-                    <p>Get started with your boards below!</p>
+                    <p>Get started with your meetings below!</p>
                 </div>
                 <div className="w-1/2 flex items-center justify-center">
                     <Separator className="max-w-sm w-full bg-black" />
