@@ -7,6 +7,7 @@ import {PDF, Transcript} from "@/types/meeting";
 import {useCreateMeetingSummaryText} from "@/hooks/useCreateMeetingSummaryText";
 import {Loader2} from "lucide-react";
 import {useCreateMeetingSummaryPDF} from "@/hooks/useCreateMeetingSummaryPDF";
+import ReturnButton from "@/components/ReturnButton";
 
 const NewMeetingPage = () => {
 
@@ -47,6 +48,11 @@ const NewMeetingPage = () => {
             <PDFForm
                 onCreateMeetingSummary={handleCreateMeetingSummaryPDF}
                 isLoading={createMeetingText.isPending || createMeetingPDF.isPending}
+            />
+
+            <ReturnButton
+                href="/dashboard"
+                className="absolute top-5 left-20 w-[120px] p-0 hidden md:block"
             />
         </div>
     );
