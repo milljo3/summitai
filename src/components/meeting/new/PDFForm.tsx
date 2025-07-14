@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { z } from "zod"
 import {
     Form,
     FormControl,
@@ -14,29 +13,20 @@ import {
 } from "@/components/ui/form"
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
+import {PDF, pdfSchema} from "@/types/meeting";
 
-export const pdfSchema = z.object({
-    pdf: z
-        .instanceof(File)
-        .refine((file) => file.size < 5000000, {
-            message: 'The file must be less than 5MB to ensure smooth processing.',
-        })
-        .refine((file) => file.type === "application/pdf", {
-            message: "Only PDF files are allowed.",
-        }),
-});
+interface PDFFormProps {
+    onCreateMeetingSummary: (pdf: PDF) => void;
+    isLoading: boolean;
+}
 
-type PDFSchema = z.infer<typeof pdfSchema>;
-
-const PDFForm = () => {
-    const form = useForm<PDFSchema>({
+const PDFForm = ({onCreateMeetingSummary, isLoading}: PDFFormProps) => {
+    const form = useForm<PDF>({
         resolver: zodResolver(pdfSchema),
     })
 
-    function onSubmit({pdf}: PDFSchema) {
-        if (pdf) {
-            console.log("PDF file submitted:", pdf);
-        }
+    function onSubmit(pdf: PDF) {
+        onCreateMeetingSummary(pdf);
     }
 
     return (
@@ -70,7 +60,9 @@ const PDFForm = () => {
                         </FormItem>
                     )}
                 />
-                <Button type="submit">Submit</Button>
+                <Button type="submit" disabled={isLoading}>
+                    Submit
+                </Button>
             </form>
         </Form>
     )

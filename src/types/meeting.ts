@@ -51,9 +51,21 @@ export const transcriptSchema = z.object({
         .max(TRANSCRIPT_MAX_LENGTH, {
             message: "Transcript must not be longer than 3000 characters.",
         }),
-})
+});
+
+export const pdfSchema = z.object({
+    pdf: z
+        .instanceof(File)
+        .refine((file) => file.size < 5000000, {
+            message: 'The file must be less than 5MB to ensure smooth processing.',
+        })
+        .refine((file) => file.type === "application/pdf", {
+            message: "Only PDF files are allowed.",
+        }),
+});
 
 export type Meeting = z.infer<typeof meetingSchema>;
 export type MeetingCard = z.infer<typeof meetingCardSchema>;
 export type ResponseMeetingSummary = z.infer<typeof responseMeetingSummarySchema>;
 export type Transcript = z.infer<typeof transcriptSchema>;
+export type PDF = z.infer<typeof pdfSchema>;
