@@ -12,14 +12,18 @@ import {
 import { Button } from "@/components/ui/button"
 import {TrashIcon} from "lucide-react";
 import {useState} from "react";
+import {useDeleteMeeting} from "@/hooks/useDeleteMeeting";
 
 interface DeleteButtonProps {
+    id: string;
     title: string
     className?: string
 }
 
-export function DeleteButton({title, className}: DeleteButtonProps) {
+export function DeleteButton({id, title, className}: DeleteButtonProps) {
     const [open, setOpen] = useState(false);
+
+    const deleteMeeting = useDeleteMeeting(id);
 
     return (
         <AlertDialog open={open} onOpenChange={setOpen}>
@@ -37,7 +41,7 @@ export function DeleteButton({title, className}: DeleteButtonProps) {
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={() => {console.log("deleted")}}>Continue</AlertDialogAction>
+                    <AlertDialogAction onClick={() => {deleteMeeting.mutate()}}>Continue</AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>

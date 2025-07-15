@@ -67,7 +67,11 @@ export const MeetingCard = ({meetingCard}: MeetingCardProps) => {
                 </Button>
             )}
 
-            <DeleteButton title={meetingCard.title} className="absolute top-1 right-1 size-7"/>
+            <DeleteButton
+                id={meetingCard.id}
+                title={meetingCard.title}
+                className="absolute top-1 right-1 size-7"
+            />
         </div>
     );
 };

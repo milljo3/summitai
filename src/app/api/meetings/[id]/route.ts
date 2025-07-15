@@ -11,12 +11,7 @@ export async function GET(req: NextRequest) {
             return NextResponse.json({ error: "Unauthorized", status: 401 });
         }
 
-        const url = new URL(req.url);
-        const id = url.pathname.split("/").pop();
-
-        if (!id) {
-            throw new Error("Meeting not found");
-        }
+        const id = getMeetingId(req);
 
         const meeting = await prisma.meeting.findUnique({
             where: { id: id },
@@ -47,4 +42,40 @@ export async function GET(req: NextRequest) {
             { status: 500, headers: { "Content-Type": "application/json" } }
         );
     }
+}
+
+export async function DELETE(req: NextRequest) {
+    try {
+        const session = await auth.api.getSession({ headers: req.headers });
+
+        if (!session?.user) {
+            return NextResponse.json({ error: "Unauthorized", status: 401 });
+        }
+
+        const id = getMeetingId(req);
+
+        await prisma.meeting.delete({
+            where: { id }
+        });
+
+        return NextResponse.json({ status: 204 });
+    }
+    catch (error) {
+        console.error(error);
+        return new NextResponse(
+            JSON.stringify(error),
+            { status: 500, headers: { "Content-Type": "application/json" } }
+        );
+    }
+}
+
+function getMeetingId(req: NextRequest) {
+    const url = new URL(req.url);
+    const id = url.pathname.split("/").pop();
+
+    if (!id) {
+        throw new Error("Meeting not found");
+    }
+
+    return id;
 }
