@@ -4,6 +4,7 @@ import {ArrowUpRight} from "lucide-react";
 import { Button } from "@/components/ui/button"
 import {useState} from "react";
 import {Badge} from "@/components/ui/badge";
+import {DeleteButton} from "@/components/meetings/DeleteButton";
 
 interface MeetingCardProps {
     meetingCard: MeetingCardType;
@@ -40,7 +41,7 @@ export const MeetingCard = ({meetingCard}: MeetingCardProps) => {
 
     return (
         <div
-            className="flex flex-col items-center px-5 py-3 gap-3 border-2 border-black w-[300px] h-64 overflow-y-auto rounded-md"
+            className="flex flex-col items-center px-5 py-3 gap-3 border-2 border-black w-[300px] h-64 overflow-y-auto rounded-md relative"
         >
             <div className="flex w-full px-10 md:px-8">
                 <Link
@@ -66,7 +67,7 @@ export const MeetingCard = ({meetingCard}: MeetingCardProps) => {
                 </Button>
             )}
 
-
+            <DeleteButton title={meetingCard.title} className="absolute top-1 right-1 size-7"/>
         </div>
     );
 };
