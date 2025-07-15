@@ -21,7 +21,7 @@ const NewMeetingPage = () => {
         createMeetingPDF.mutate(pdf);
     }
 
-    if (createMeetingText.isPending || createMeetingPDF.isPending || createMeetingPDF.data || createMeetingText.data) {
+    if (createMeetingText.isPending || createMeetingPDF.isPending || createMeetingPDF.isSuccess || createMeetingText.isSuccess) {
         return (
             <div className="h-dvh flex flex-col gap-4 items-center justify-center">
                 <p className="text-lg">Generating your meeting summary...</p>

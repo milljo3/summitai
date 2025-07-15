@@ -28,7 +28,7 @@ export function DeleteButton({id, title, className}: DeleteButtonProps) {
     return (
         <AlertDialog open={open} onOpenChange={setOpen}>
             <AlertDialogTrigger asChild className={className}>
-                <Button size="icon">
+                <Button size="icon" disabled={deleteMeeting.isPending || deleteMeeting.isSuccess}>
                     <TrashIcon />
                 </Button>
             </AlertDialogTrigger>
