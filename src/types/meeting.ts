@@ -64,9 +64,25 @@ export const pdfSchema = z.object({
         }),
 });
 
+export const patchMeetingSchema = responseMeetingSummarySchema.partial();
+
+// Meeting Page Sections
+
+export const titleSchema = z.object({
+    title: z.string().min(1, "Title must be at least 1 characters.").max(200, "Title must be shorter than 200 characters."),
+});
+
+export const summarySchema = z.object({
+    summary: z.string().min(1, "Summary must be at least 1 characters.").max(1200, "Summary must be shorter than 1200 characters.")
+});
+
 export type Action = z.infer<typeof actionSchema>
 export type Meeting = z.infer<typeof meetingSchema>
 export type MeetingCard = z.infer<typeof meetingCardSchema>;
 export type ResponseMeetingSummary = z.infer<typeof responseMeetingSummarySchema>;
 export type Transcript = z.infer<typeof transcriptSchema>;
 export type PDF = z.infer<typeof pdfSchema>;
+export type PatchMeeting = z.infer<typeof patchMeetingSchema>;
+
+export type TitleForm = z.infer<typeof titleSchema>;
+export type SummaryForm = z.infer<typeof summarySchema>;
