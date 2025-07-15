@@ -2,11 +2,6 @@ import {MeetingCard as MeetingCardType} from "@/types/meeting";
 import Link from "next/link";
 import {ArrowUpRight} from "lucide-react";
 import { Button } from "@/components/ui/button"
-import {
-    Collapsible,
-    CollapsibleContent,
-    CollapsibleTrigger,
-} from "@/components/ui/collapsible"
 import {useState} from "react";
 import {Badge} from "@/components/ui/badge";
 
@@ -20,48 +15,58 @@ export const MeetingCard = ({meetingCard}: MeetingCardProps) => {
     const [isOpen, setIsOpen] = useState(false)
 
     const initialTags = meetingCard.tags.slice(0, INITIAL_TAGS);
-    const remainingTags = meetingCard.tags.slice(INITIAL_TAGS);
 
-    return (
-        <Collapsible
-            open={isOpen}
-            onOpenChange={setIsOpen}
-            className="flex flex-col items-center px-5 py-3 gap-3 border-2 border-black w-[300px] h-64 overflow-y-auto rounded-md"
-        >
-            <Link
-                className="text-lg flex items-center justify-center gap-2 underline"
-                href={`/meetings/${meetingCard.id}`}
-            >
-                {meetingCard.title} <ArrowUpRight />
-            </Link>
-            <p className="text-sm">{meetingCard.summary}</p>
-            <div className="flex flex-col gap-2 flex-1">
-                <div className="flex flex-wrap gap-2">
-                    {initialTags.map(tag => (
+    const tags = (
+        <div className="flex flex-wrap gap-2">
+            {!isOpen ? (
+                initialTags.map(tag => (
                         <Badge
                             key={tag}
                         >
                             <p>{tag}</p>
                         </Badge>
-                    ))}
-                </div>
-                {remainingTags.length > 0 && (
-                    <CollapsibleContent className="flex flex-wrap gap-2">
-                        {remainingTags.map(tag => (
-                            <Badge
-                                key={tag}
-                            >
-                                <p>{tag}</p>
-                            </Badge>
-                        ))}
-                    </CollapsibleContent>
-                )}
+                    ))
+            ) : (
+                meetingCard.tags.map(tag => (
+                        <Badge
+                            key={tag}
+                        >
+                            <p>{tag}</p>
+                        </Badge>
+                    ))
+            )}
+        </div>
+    )
+
+    return (
+        <div
+            className="flex flex-col items-center px-5 py-3 gap-3 border-2 border-black w-[300px] h-64 overflow-y-auto rounded-md"
+        >
+            <div className="flex w-full px-10 md:px-8">
+                <Link
+                    className="flex items-center justify-center gap-1 underline w-full"
+                    href={`/meetings/${meetingCard.id}`}
+                >
+                    <p className="text-center">{meetingCard.title}</p>
+                    <ArrowUpRight />
+                </Link>
             </div>
-            <CollapsibleTrigger asChild>
-                <Button size="default" className="w-1/2" variant="ghost">
+            <p className="text-sm">{meetingCard.summary}</p>
+            <div className="flex flex-col gap-2 flex-1 w-full">
+                {tags}
+            </div>
+            {meetingCard.tags.length > INITIAL_TAGS && (
+                <Button
+                    size="default"
+                    className="w-1/2 self-center"
+                    variant="ghost"
+                    onClick={() => setIsOpen(!isOpen)}
+                >
                     <p>{isOpen ? "View less" : "View more"}</p>
                 </Button>
-            </CollapsibleTrigger>
-        </Collapsible>
+            )}
+
+
+        </div>
     );
 };
