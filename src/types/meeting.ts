@@ -1,45 +1,79 @@
 import { z } from "zod";
-import {MEETING_CARD_SUMMARY_MAX_LENGTH, TRANSCRIPT_MAX_LENGTH} from "@/consts/consts";
+import {
+    DEADLINE_MAX_LENGTH,
+    DEADLINE_MIN_LENGTH,
+    DECISION_MAX_LENGTH,
+    DECISION_MIN_LENGTH,
+    MEETING_CARD_SUMMARY_MAX_LENGTH,
+    QUESTION_MAX_LENGTH,
+    QUESTION_MIN_LENGTH, RESPONSIBLE_MAX_LENGTH, RESPONSIBLE_MIN_LENGTH,
+    SUMMARY_MAX_LENGTH,
+    SUMMARY_MIN_LENGTH, TAG_MAX_LENGTH,
+    TAG_MIN_LENGTH, TASK_MAX_LENGTH, TASK_MIN_LENGTH,
+    TITLE_MAX_LENGTH,
+    TITLE_MIN_LENGTH,
+    TRANSCRIPT_MAX_LENGTH
+} from "@/consts/consts";
 
-export const responseActionSchema = z.object({
-    task: z.string().default("unknown"),
-    responsible: z.string().default("unknown"),
-    deadline: z.string().default("unknown"),
-});
 
-export const responseMeetingSummarySchema = z.object({
-    title: z.string().default("Untitled Meeting"),
-    summary: z.string().default("unknown"),
-    actions: z.array(responseActionSchema).default([]),
-    questions: z.array(z.string()).default([]),
-    decisions: z.array(z.string()).default([]),
-    tags: z.array(z.string()).default([]),
-});
-
-export const meetingCardSchema = z.object({
+export const actionSchema = z.object({
     id: z.string(),
-    title: z.string(),
-    summary: z.string().max(MEETING_CARD_SUMMARY_MAX_LENGTH + 3), /// 3 for ...
-    tags: z.array(z.string()),
+    task: z.string()
+        .min(TASK_MIN_LENGTH, `Task must be at least ${TASK_MIN_LENGTH} characters.`)
+        .max(TASK_MAX_LENGTH, `Task must be shorter than ${TASK_MAX_LENGTH} characters.`)
+        .default("unknown"),
+    responsible: z.string()
+        .min(RESPONSIBLE_MIN_LENGTH, `Responsible must be at least ${RESPONSIBLE_MIN_LENGTH} characters.`)
+        .max(RESPONSIBLE_MAX_LENGTH, `Responsible must be shorter than ${RESPONSIBLE_MAX_LENGTH} characters.`)
+        .default("unknown"),
+    deadline: z.string()
+        .min(DEADLINE_MIN_LENGTH, `Deadline must be at least ${DEADLINE_MIN_LENGTH} characters.`)
+        .max(DEADLINE_MAX_LENGTH, `Deadline must be shorter than ${DEADLINE_MAX_LENGTH} characters.`)
+        .default("unknown"),
+});
+
+export const responseActionSchema = actionSchema.omit({ id: true });
+
+export const meetingSchema = z.object({
+    id: z.string(),
+    title: z.string()
+        .min(TITLE_MIN_LENGTH, `Title must be at least ${TITLE_MIN_LENGTH} characters.`)
+        .max(TITLE_MAX_LENGTH, `Title must be shorter than ${TITLE_MAX_LENGTH} characters.`)
+        .default("Untitled Meeting"),
+    summary: z.string()
+        .min(SUMMARY_MIN_LENGTH, `Summary must be at least ${SUMMARY_MIN_LENGTH} characters.`)
+        .max(SUMMARY_MAX_LENGTH, `Summary must be shorter than ${SUMMARY_MAX_LENGTH} characters.`)
+        .default("unknown"),
+    actions: z.array(actionSchema).default([]),
+    questions: z.array(
+        z.string()
+            .min(QUESTION_MIN_LENGTH, `Question must be at least ${QUESTION_MIN_LENGTH} characters.`)
+            .max(QUESTION_MAX_LENGTH, `Question must be shorter than ${QUESTION_MAX_LENGTH} characters.`)
+    ).default([]),
+    decisions: z.array(
+        z.string()
+            .min(DECISION_MIN_LENGTH, `Decision must be at least ${DECISION_MIN_LENGTH} characters.`)
+            .max(DECISION_MAX_LENGTH, `Decision must be shorter than ${DECISION_MAX_LENGTH} characters.`)
+    ).default([]),
+    tags: z.array(
+        z.string()
+            .min(TAG_MIN_LENGTH, `Tag must be at least ${TAG_MIN_LENGTH} characters.`)
+            .max(TAG_MAX_LENGTH, `Tag must be shorter than ${TAG_MAX_LENGTH} characters.`)
+    ).default([]),
     createdAt: z.coerce.date(),
     updatedAt: z.coerce.date(),
 });
+
+export const responseMeetingSummarySchema = meetingSchema.extend({
+    actions: z.array(responseActionSchema).default([]),
+}).omit({id: true, createdAt: true, updatedAt: true});
+
+export const meetingCardSchema = meetingSchema.extend({
+    summary: z.string().max(MEETING_CARD_SUMMARY_MAX_LENGTH + 3), /// 3 for ...
+}).omit({ actions: true, questions: true, decisions: true });
 
 export const meetingCardsResponseSchema = z.object({
     meetings: z.array(meetingCardSchema),
-});
-
-
-export const actionSchema = responseActionSchema.extend({
-   id: z.string(),
-});
-
-export const meetingSchema = responseMeetingSummarySchema.extend({
-    questions: z.array(z.string()).default([]),
-    decisions: z.array(z.string()).default([]),
-    actions: z.array(actionSchema).default([]),
-    createdAt: z.coerce.date(),
-    updatedAt: z.coerce.date(),
 });
 
 export const transcriptSchema = z.object({
@@ -57,7 +91,7 @@ export const pdfSchema = z.object({
     pdf: z
         .instanceof(File)
         .refine((file) => file.size < 5000000, {
-            message: 'The file must be less than 5MB to ensure smooth processing.',
+            message: 'The file must be less than 5MB.',
         })
         .refine((file) => file.type === "application/pdf", {
             message: "Only PDF files are allowed.",
@@ -68,13 +102,8 @@ export const patchMeetingSchema = responseMeetingSummarySchema.partial();
 
 // Meeting Page Sections
 
-export const titleSchema = z.object({
-    title: z.string().min(1, "Title must be at least 1 characters.").max(200, "Title must be shorter than 200 characters."),
-});
-
-export const summarySchema = z.object({
-    summary: z.string().min(1, "Summary must be at least 1 characters.").max(1200, "Summary must be shorter than 1200 characters.")
-});
+export const titleSchema = meetingSchema.pick({ title: true }).required();
+export const summarySchema = meetingSchema.pick({ summary: true }).required();
 
 export type Action = z.infer<typeof actionSchema>
 export type Meeting = z.infer<typeof meetingSchema>
