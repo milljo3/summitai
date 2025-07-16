@@ -1,7 +1,7 @@
 import {NextRequest, NextResponse} from "next/server";
 import {auth} from "@/lib/auth";
 import {prisma} from "@/lib/prisma";
-import {meetingSchema} from "@/types/meeting";
+import {Action, meetingSchema, patchMeetingSchema} from "@/types/meeting";
 
 export async function GET(req: NextRequest) {
     try {
@@ -44,6 +44,60 @@ export async function GET(req: NextRequest) {
     }
 }
 
+export async function PATCH(req: NextRequest) {
+    try {
+        const session = await auth.api.getSession({ headers: req.headers });
+
+        if (!session?.user) {
+            return NextResponse.json({ error: "Unauthorized", status: 401 });
+        }
+
+        const id = getMeetingId(req);
+        const body = await req.json();
+
+        const parsed = patchMeetingSchema.safeParse(body);
+
+        if (!parsed.success) {
+            console.log(parsed.error);
+            throw new Error("Meeting schema invalid");
+        }
+
+        const data = parsed.data;
+
+        const cleanedData = Object.fromEntries(
+            Object.entries(data).filter(([key]) => key in body)
+        );
+
+        const result = await prisma.$transaction(async (tx) => {
+            const updatedMeeting = await tx.meeting.update({
+                where: { id },
+                data: cleanedData,
+            });
+
+            if (shouldUpdateActions(body)) {
+                const actions = data.actions!.map((action) => ({
+                    ...action,
+                    meetingId: id,
+                }));
+
+                await tx.action.deleteMany({ where: { meetingId: id } });
+                await tx.action.createMany({ data: actions });
+            }
+
+            return updatedMeeting;
+        });
+
+        return NextResponse.json(result);
+    }
+    catch (error) {
+        console.error(error);
+        return new NextResponse(
+            JSON.stringify(error),
+            { status: 500, headers: { "Content-Type": "application/json" } }
+        );
+    }
+}
+
 export async function DELETE(req: NextRequest) {
     try {
         const session = await auth.api.getSession({ headers: req.headers });
@@ -69,7 +123,7 @@ export async function DELETE(req: NextRequest) {
     }
 }
 
-function getMeetingId(req: NextRequest) {
+export function getMeetingId(req: NextRequest) {
     const url = new URL(req.url);
     const id = url.pathname.split("/").pop();
 
@@ -78,4 +132,8 @@ function getMeetingId(req: NextRequest) {
     }
 
     return id;
+}
+
+function shouldUpdateActions(body: Record<string, unknown>): body is { actions: Action[] } {
+    return "actions" in body && Array.isArray(body.actions);
 }
