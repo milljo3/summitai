@@ -9,6 +9,7 @@ export function useDeleteMeeting(id: string) {
         mutationFn: () => deleteMeeting(id),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["meetings"] });
+            toast.success("Meeting successfully deleted.");
         },
         onError: (error) => {
             console.error(error);
