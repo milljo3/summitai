@@ -123,7 +123,7 @@ export async function DELETE(req: NextRequest) {
     }
 }
 
-export function getMeetingId(req: NextRequest) {
+function getMeetingId(req: NextRequest) {
     const url = new URL(req.url);
     const id = url.pathname.split("/").pop();
 
