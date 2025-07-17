@@ -23,8 +23,8 @@ const ActionsTable = ({ actions }: ActionsTableProps) => {
                 </TableRow>
             </TableHeader>
             <TableBody>
-                {actions.map((action) => (
-                    <TableRow key={action.id}>
+                {actions.map((action, index) => (
+                    <TableRow key={index}>
                         <TableCell>{action.task}</TableCell>
                         <TableCell>{action.responsible}</TableCell>
                         <TableCell>{action.deadline}</TableCell>
