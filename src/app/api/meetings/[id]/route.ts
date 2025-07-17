@@ -1,7 +1,7 @@
 import {NextRequest, NextResponse} from "next/server";
 import {auth} from "@/lib/auth";
 import {prisma} from "@/lib/prisma";
-import {Action, meetingSchema, patchMeetingSchema} from "@/types/meeting";
+import {meetingSchema, patchMeetingSchema} from "@/types/meeting";
 
 export async function GET(req: NextRequest) {
     try {
@@ -68,26 +68,12 @@ export async function PATCH(req: NextRequest) {
             Object.entries(data).filter(([key]) => key in body)
         );
 
-        const result = await prisma.$transaction(async (tx) => {
-            const updatedMeeting = await tx.meeting.update({
-                where: { id },
-                data: cleanedData,
-            });
-
-            if (shouldUpdateActions(body)) {
-                const actions = data.actions!.map((action) => ({
-                    ...action,
-                    meetingId: id,
-                }));
-
-                await tx.action.deleteMany({ where: { meetingId: id } });
-                await tx.action.createMany({ data: actions });
-            }
-
-            return updatedMeeting;
+        const updatedMeeting = await prisma.meeting.update({
+            where: { id },
+            data: cleanedData,
         });
 
-        return NextResponse.json(result);
+        return NextResponse.json(updatedMeeting);
     }
     catch (error) {
         console.error(error);
@@ -132,8 +118,4 @@ function getMeetingId(req: NextRequest) {
     }
 
     return id;
-}
-
-function shouldUpdateActions(body: Record<string, unknown>): body is { actions: Action[] } {
-    return "actions" in body && Array.isArray(body.actions);
 }
