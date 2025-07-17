@@ -48,7 +48,7 @@ const TitleSection = ({initialTitle, onSave, disabled}: TitleSectionProps) => {
     return (
         <>
             {!isEditing ? (
-                <div className="flex items-center justify-center gap-2">
+                <div className="flex items-center justify-center gap-2 z-10">
                     <h1 className="font-extrabold text-3xl text-center">{initialTitle}</h1>
                     <Button
                         size="icon"
@@ -61,7 +61,7 @@ const TitleSection = ({initialTitle, onSave, disabled}: TitleSectionProps) => {
                 </div>
             ) : (
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(handleSave)} className="md:w-2/3 space-y-6 w-full">
+                    <form onSubmit={form.handleSubmit(handleSave)} className="md:w-2/3 space-y-6 w-full z-10">
                         <FormField
                             control={form.control}
                             name="title"

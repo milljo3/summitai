@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import {Toaster} from "sonner";
 import QueryProvider from "@/app/providers/QueryProvider";
+import Link from "next/link";
+import SignOutButton from "@/components/auth/SignOutButton";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,9 +31,18 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <QueryProvider>
-            {children}
-        </QueryProvider>
+      <div className="flex justify-between items-center absolute top-0 left-0 w-full p-4">
+        <Link
+            href="/"
+            className="text-lg"
+        >
+          SummitAi
+        </Link>
+        <SignOutButton />
+      </div>
+      <QueryProvider>
+        {children}
+      </QueryProvider>
         <Toaster position="top-center" theme="dark" richColors={true} />
       </body>
     </html>

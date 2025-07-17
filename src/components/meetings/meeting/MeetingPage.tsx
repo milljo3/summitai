@@ -47,7 +47,7 @@ const MeetingPage = () => {
     }
 
     return (
-        <div className="flex flex-col items-center h-dvh gap-4 px-4 py-6 overflow-y-auto">
+        <div className="flex flex-col items-center h-dvh gap-4 px-4 overflow-y-auto pt-20 pb-6">
             <TitleSection initialTitle={data.title} onSave={handleEditMeeting} disabled={editMeeting.isPending} />
             <SummarySection initialSummary={data.summary} onSave={handleEditMeeting} disabled={editMeeting.isPending} />
             <QuestionsSection initialQuestions={data.questions} onSave={handleEditMeeting} disabled={editMeeting.isPending} />
@@ -56,7 +56,7 @@ const MeetingPage = () => {
             <TagsSection initialTags={data.tags} onSave={handleEditMeeting} disabled={editMeeting.isPending} />
             <ReturnButton
                 href="/dashboard"
-                className="absolute top-5 lg:left-15 w-[120px] p-0 hidden md:block md:left-5"
+                className="absolute top-5 lg:left-45 w-[120px] p-0 hidden md:block md:left-[120px]"
             />
         </div>
     );

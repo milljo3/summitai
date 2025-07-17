@@ -31,8 +31,8 @@ const NewMeetingPage = () => {
     }
 
     return (
-        <div className="h-dvh flex flex-col items-center justify-center gap-6">
-            <h1 className="text-2xl font-extrabold">Summarize a meeting transcript</h1>
+        <div className="h-dvh flex flex-col items-center justify-center gap-6 lg:pt-10 md:pt-32 pt-[180px] pb-6">
+            <h1 className="text-2xl font-extrabold text-center">Summarize a meeting transcript</h1>
             <h2 className="font-bold text-2xl">Submit as text</h2>
             <TextAreaForm
                 onCreateMeetingSummary={handleCreateMeetingSummaryText}
@@ -51,7 +51,7 @@ const NewMeetingPage = () => {
 
             <ReturnButton
                 href="/dashboard"
-                className="absolute top-5 left-20 w-[120px] p-0 hidden md:block"
+                className="absolute top-5 left-40 w-[120px] p-0 hidden md:block"
             />
         </div>
     );
