@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {PatchMeeting, TitleForm, titleSchema} from "@/types/meeting";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
@@ -23,13 +23,25 @@ const TitleSection = ({initialTitle, onSave, disabled}: TitleSectionProps) => {
         }
     });
 
+    useEffect(() => {
+        if (!isEditing) {
+            form.reset({
+                title: initialTitle,
+            });
+        }
+    }, [initialTitle, isEditing, form]);
+
     const handleSave = (data: PatchMeeting) => {
-        onSave(data);
+        if (data.title !== initialTitle) {
+            onSave({title: data.title});
+        }
         setIsEditing(false);
     }
 
     const handleCancel = () => {
-        form.reset();
+        form.reset({
+            title: initialTitle,
+        });
         setIsEditing(false);
     }
 
