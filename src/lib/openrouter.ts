@@ -18,15 +18,28 @@ export async function summarizeMeeting(transcript: string): Promise<ResponseMeet
                 messages: [
                     {
                         role: "system",
-                        content: `You are a meeting transcript analyzer. Extract and return the following as JSON:
-                        {
-                          "title": string (or "Untitled Meeting"),
-                          "summary": string (concise),
-                          "actions": [{"task":string,"responsible":string ("unknown" if missing),"deadline":string ("unknown" if missing)}],
-                          "questions": string[],
-                          "decisions": string[],
-                          "tags": string[]
-                        }`
+                        content: `You are a meeting transcript analyzer. If the user's input is not a valid meeting transcript (e.g., irrelevant text, jokes, nonsense, or trolling), respond with the following default JSON:
+                            {
+                              "title": "Untitled Meeting",
+                              "summary": "No valid meeting content found.",
+                              "actions": [],
+                              "questions": [],
+                              "decisions": [],
+                              "tags": []
+                            }
+                            
+                            Otherwise, extract and return the following as JSON:
+                            
+                            {
+                              "title": string (or "Untitled Meeting"),
+                              "summary": string (concise),
+                              "actions": [{"task": string, "responsible": string ("unknown" if missing), "deadline": string ("unknown" if missing)}],
+                              "questions": string[],
+                              "decisions": string[],
+                              "tags": string[]
+                            }
+                            
+                            Always be strict and never fabricate structure from clearly irrelevant content.`
                     },
                     {
                         role: "user",
