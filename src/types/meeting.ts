@@ -123,6 +123,11 @@ export const decisionSchema = z.object({
         .min(DECISION_MIN_LENGTH, `Decision must be at least ${DECISION_MIN_LENGTH} characters.`)
         .max(DECISION_MAX_LENGTH, `Decision must be shorter than ${DECISION_MAX_LENGTH} characters.`)
 });
+export const tagSchema = z.object({
+    tag: z.string()
+        .min(TAG_MIN_LENGTH, `Tag must be at least ${TAG_MIN_LENGTH} characters.`)
+        .max(TAG_MAX_LENGTH, `Tag must be shorter than ${TAG_MAX_LENGTH} characters.`)
+});
 
 export const questionFormSchema = z.object({
     questions: z.array(questionSchema)
@@ -131,6 +136,9 @@ export const questionFormSchema = z.object({
 export const decisionFormSchema = z.object({
     decisions: z.array(decisionSchema)
 });
+export const tagFormSchema = z.object({
+    tags: z.array(tagSchema)
+})
 
 export type Action = z.infer<typeof actionSchema>
 export type Meeting = z.infer<typeof meetingSchema>
@@ -149,6 +157,8 @@ export type Question = z.infer<typeof questionSchema>;
 export type QuestionForm = z.infer<typeof questionFormSchema>;
 export type Decision = z.infer<typeof decisionSchema>;
 export type DecisionForm = z.infer<typeof decisionFormSchema>;
+export type Tag = z.infer<typeof tagSchema>;
+export type TagForm = z.infer<typeof tagFormSchema>;
 
 
 export function stringArrayToQuestionItems(strings: string[]): Question[] {
@@ -165,4 +175,12 @@ export function stringArrayToDecisionItems(strings: string[]): Decision[] {
 
 export function decisionItemsToStringArray(decisions: Decision[]): string[] {
     return decisions.map(decision => decision.decision);
+}
+
+export function stringArrayToTagItems(strings: string[]): Tag[] {
+    return strings.map(tag => ({ tag }));
+}
+
+export function tagItemsToStringArray(tags: Tag[]): string[] {
+    return tags.map(tag => tag.tag);
 }

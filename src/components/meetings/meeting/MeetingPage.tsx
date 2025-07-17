@@ -13,6 +13,7 @@ import ActionsSection from "@/components/meetings/meeting/ActionsSection";
 import DecisionsSection from "@/components/meetings/meeting/DecisionsSection";
 import QuestionsSection from "@/components/meetings/meeting/QuestionsSection";
 import SummarySection from "@/components/meetings/meeting/SummarySection";
+import TagsSection from "@/components/meetings/meeting/TagsSection";
 
 const MeetingPage = () => {
     const params = useParams();
@@ -46,12 +47,13 @@ const MeetingPage = () => {
     }
 
     return (
-        <div className="flex flex-col items-center h-dvh gap-4 px-4 py-6">
+        <div className="flex flex-col items-center h-dvh gap-4 px-4 py-6 overflow-y-auto">
             <TitleSection initialTitle={data.title} onSave={handleEditMeeting} disabled={editMeeting.isPending} />
             <SummarySection initialSummary={data.summary} onSave={handleEditMeeting} disabled={editMeeting.isPending} />
             <QuestionsSection initialQuestions={data.questions} onSave={handleEditMeeting} disabled={editMeeting.isPending} />
             <DecisionsSection initialDecisions={data.decisions} onSave={handleEditMeeting} disabled={editMeeting.isPending} />
             <ActionsSection id={id} initialActions={data.actions} />
+            <TagsSection initialTags={data.tags} onSave={handleEditMeeting} disabled={editMeeting.isPending} />
             <ReturnButton
                 href="/dashboard"
                 className="absolute top-5 lg:left-15 w-[120px] p-0 hidden md:block md:left-5"
