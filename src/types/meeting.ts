@@ -98,16 +98,44 @@ export const pdfSchema = z.object({
         }),
 });
 
-export const patchMeetingSchema = responseMeetingSummarySchema.partial();
+export const patchMeetingSchema = responseMeetingSummarySchema
+    .partial()
+    .omit({ actions: true });
 
 // Meeting Page Sections
 
 export const titleSchema = meetingSchema.pick({ title: true }).required();
 export const summarySchema = meetingSchema.pick({ summary: true }).required();
+export const actionFormSchema = actionSchema.omit({ id: true }).required();
+export const actionFormArraySchema = z.object({
+    actions: z.array(actionFormSchema),
+});
+
+
+
+export const questionSchema = z.object({
+    question: z.string()
+        .min(QUESTION_MIN_LENGTH, `Question must be at least ${QUESTION_MIN_LENGTH} characters.`)
+        .max(QUESTION_MAX_LENGTH, `Question must be shorter than ${QUESTION_MAX_LENGTH} characters.`)
+});
+export const decisionSchema = z.object({
+    decision: z.string()
+        .min(DECISION_MIN_LENGTH, `Decision must be at least ${DECISION_MIN_LENGTH} characters.`)
+        .max(DECISION_MAX_LENGTH, `Decision must be shorter than ${DECISION_MAX_LENGTH} characters.`)
+});
+
+export const questionFormSchema = z.object({
+    questions: z.array(questionSchema)
+});
+
+export const decisionFormSchema = z.object({
+    decisions: z.array(decisionSchema)
+});
 
 export type Action = z.infer<typeof actionSchema>
 export type Meeting = z.infer<typeof meetingSchema>
 export type MeetingCard = z.infer<typeof meetingCardSchema>;
+export type ResponseAction = z.infer<typeof responseActionSchema>;
 export type ResponseMeetingSummary = z.infer<typeof responseMeetingSummarySchema>;
 export type Transcript = z.infer<typeof transcriptSchema>;
 export type PDF = z.infer<typeof pdfSchema>;
@@ -115,3 +143,26 @@ export type PatchMeeting = z.infer<typeof patchMeetingSchema>;
 
 export type TitleForm = z.infer<typeof titleSchema>;
 export type SummaryForm = z.infer<typeof summarySchema>;
+export type ActionForm = z.infer<typeof actionFormSchema>;
+export type ActionFormArray = z.infer<typeof actionFormArraySchema>;
+export type Question = z.infer<typeof questionSchema>;
+export type QuestionForm = z.infer<typeof questionFormSchema>;
+export type Decision = z.infer<typeof decisionSchema>;
+export type DecisionForm = z.infer<typeof decisionFormSchema>;
+
+
+export function stringArrayToQuestionItems(strings: string[]): Question[] {
+    return strings.map(question => ({ question }));
+}
+
+export function questionItemsToStringArray(questions: Question[]): string[] {
+    return questions.map(question => question.question);
+}
+
+export function stringArrayToDecisionItems(strings: string[]): Decision[] {
+    return strings.map(decision => ({ decision }));
+}
+
+export function decisionItemsToStringArray(decisions: Decision[]): string[] {
+    return decisions.map(decision => decision.decision);
+}
