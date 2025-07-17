@@ -25,6 +25,11 @@ export function DeleteButton({id, title, className}: DeleteButtonProps) {
 
     const deleteMeeting = useDeleteMeeting(id);
 
+    const handleDelete = () => {
+        deleteMeeting.mutate();
+        setOpen(false);
+    }
+
     return (
         <AlertDialog open={open} onOpenChange={setOpen}>
             <AlertDialogTrigger asChild className={className}>
@@ -40,8 +45,17 @@ export function DeleteButton({id, title, className}: DeleteButtonProps) {
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={() => {deleteMeeting.mutate()}}>Continue</AlertDialogAction>
+                    <AlertDialogCancel
+                        disabled={deleteMeeting.isPending}
+                    >
+                        Cancel
+                    </AlertDialogCancel>
+                    <AlertDialogAction
+                        onClick={handleDelete}
+                        disabled={deleteMeeting.isPending}
+                    >
+                        Continue
+                    </AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>
