@@ -4,7 +4,7 @@ import "./globals.css";
 import {Toaster} from "sonner";
 import QueryProvider from "@/app/providers/QueryProvider";
 import Link from "next/link";
-import SignOutButton from "@/components/auth/SignOutButton";
+import {OptionsDropDownMenu} from "@/components/auth/OptionsDropDownMenu";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,7 +38,7 @@ export default function RootLayout({
         >
           SummitAi
         </Link>
-        <SignOutButton />
+        <OptionsDropDownMenu />
       </div>
       <QueryProvider>
         {children}
