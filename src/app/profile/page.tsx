@@ -17,7 +17,7 @@ const Page = async () => {
     }
 
     return (
-        <div className="px-8 md:py-32 py-20 container mx-auto max-w-screen-lg space-y-8">
+        <div className="px-8 md:pt-32 pt-20 pb-10 container mx-auto max-w-screen-lg space-y-8">
             <div className="space-y-8">
                 <h1 className="text-3xl font-bold">Profile</h1>
             </div>
