@@ -6,6 +6,8 @@ function Page() {
             </div>
             <p className="text-muted-foreground">
                 Success! You have successfully registered. Please check your email for the verification link.
+                <br/>
+                Note: It may take a few minutes.
             </p>
         </div>
     );
