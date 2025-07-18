@@ -1,42 +1,52 @@
 "use client";
 
-import { signUp } from "@/lib/auth-client";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
-import {useRouter} from "next/navigation";
-import SignInOAuthButton from "@/components/auth/SignInOAuthButton";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { z } from "zod";
-import {useForm} from "react-hook-form";
-import {zodResolver} from "@hookform/resolvers/zod";
-import {cn} from "@/lib/utils";
+import { toast } from "sonner";
+
+import { signUp } from "@/lib/auth-client";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/components/ui/form";
+import SignInOAuthButton from "@/components/auth/SignInOAuthButton";
 
 const signUpSchema = z.object({
-    email: z.email({ message: "Invalid email address" }),
-    password: z.string().min(6, { message: "Password must be at least 6 characters" }),
+    email: z.email("Invalid email address"),
+    password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
 type SignUpSchema = z.infer<typeof signUpSchema>;
 
 const SignUpForm = () => {
     const router = useRouter();
-    const {
-        register,
-        handleSubmit,
-        formState : {errors, isSubmitting},
-    } = useForm<SignUpSchema>({
+
+    const form = useForm<SignUpSchema>({
         resolver: zodResolver(signUpSchema),
+        defaultValues: {
+            email: "",
+            password: "",
+        },
     });
 
-    const onSubmit = async ({ email, password }: SignUpSchema) => {
-        const name = email.split("@")[0];
+    const isSubmitting = form.formState.isSubmitting;
+
+    const onSubmit = async (data: SignUpSchema) => {
+        const name = data.email.split("@")[0];
 
         await signUp.email(
             {
                 name,
-                email,
-                password,
+                email: data.email,
+                password: data.password,
             },
             {
                 onRequest: () => {},
@@ -54,43 +64,51 @@ const SignUpForm = () => {
 
     return (
         <div className="flex flex-col gap-4 w-full justify-center items-center">
-            <form onSubmit={handleSubmit(onSubmit)} className="max-w-sm space-y-3 px-4 w-full">
-                <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input
-                        className={cn({ "border-red-500 focus-visible:ring-red-500": errors.email })}
-                        type="email"
-                        id="email"
-                        {...register("email")}
+            <Form {...form}>
+                <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    noValidate
+                    className="max-w-sm space-y-4 px-4 w-full"
+                >
+                    <FormField
+                        control={form.control}
+                        name="email"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Email</FormLabel>
+                                <FormControl>
+                                    <Input type="email" placeholder="you@example.com" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
                     />
-                    {errors.email && (
-                        <p className="text-sm text-red-500">{errors.email.message}</p>
-                    )}
-                </div>
 
-                <div className="space-y-2">
-                    <Label htmlFor="password">Password</Label>
-                    <Input
-                        className={cn({ "border-red-500 focus-visible:ring-red-500": errors.password })}
-                        id="password"
-                        type="password"
-                        {...register("password")}
+                    <FormField
+                        control={form.control}
+                        name="password"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Password</FormLabel>
+                                <FormControl>
+                                    <Input type="password" placeholder="••••••••" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
                     />
-                    {errors.password && (
-                        <p className="text-sm text-red-500">{errors.password.message}</p>
-                    )}
-                </div>
 
-                <Button type="submit" className="w-full cursor-pointer" disabled={isSubmitting}>
-                    {isSubmitting ? "Signing up..." : "Sign up"}
-                </Button>
-            </form>
+                    <Button type="submit" className="w-full" disabled={isSubmitting}>
+                        {isSubmitting ? "Signing up..." : "Sign up"}
+                    </Button>
+                </form>
+            </Form>
 
             <hr className="max-w-sm w-full" />
 
             <div className="max-w-sm space-y-3 px-4 w-full flex flex-col">
-                <SignInOAuthButton provider={"google"} signUp />
-                <SignInOAuthButton provider={"github"} signUp />
+                <SignInOAuthButton provider="google" signUp />
+                <SignInOAuthButton provider="github" signUp />
             </div>
         </div>
     );
