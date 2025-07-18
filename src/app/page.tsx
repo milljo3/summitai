@@ -9,7 +9,7 @@ export default function Home() {
         <div className="flex items-center justify-center flex-col gap-8">
           <div className="flex justify-center gap-6 flex-col items-center">
             <h1 className="text-6xl font-bold text-center">Welcome to SummitAi</h1>
-            <p>Start organizing and summarizing your meetings now!</p>
+            <p className="text-center">Start organizing and summarizing your meetings now!</p>
           </div>
           <GetStartedButton />
           <div className="flex items-center justify-center flex-col gap-1">
