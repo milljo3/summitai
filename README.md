@@ -1,36 +1,114 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SummitAi
 
-## Getting Started
+**SummitAi** is a web application designed to help users organize and generate concise summaries of their meetings. Users can upload a PDF or paste raw transcript text, which is processed and structured into a summary with clear sections: **Title**, **Summary**, **Questions**, **Decisions**, **Actions**, and **Tags**.
 
-First, run the development server:
+Each meeting gets its own dedicated page. All meetings are accessible from a personalized **dashboard**, which supports **client-side substring searching** and **tag-based filtering** to quickly find relevant summaries. Meetings can be modified on its meeting page to add / remove content.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+This project introduced me to:
+
+* **Openrouter api calling & structured prompt design**
+* **Dynamic client-side filtering and search**
+* **Text-to-structured-data workflows using LLMs**
+
+It also builds on prior experience with:
+
+* **Next.js** & **React**
+* **TailwindCSS**
+* **shadcn/ui**
+* **better-auth** (email + OAuth)
+* **Zod** for schema validation
+* **Prisma ORM** with **PostgreSQL**
+* **React Query**
+* **Nodemailer**
+* **Vercel** deployment
+
+🔗 **Live Demo**: [summitai-seven.vercel.app](https://summitai-seven.vercel.app)
+
+---
+
+## Table of Contents
+
+* [Features](#features)
+* [Tech Stack](#tech-stack)
+* [Folder Structure](#folder-structure)
+* [Challenges Faced](#challenges-faced)
+* [Future Improvements](#future-improvements)
+
+---
+
+## Features
+
+* **Meeting Summarization**
+
+  * Upload PDF or paste raw meeting transcript
+  * Transcripts are processed via Mistral Small 3.2 24B (accessed through OpenRouter)
+  * Summaries structured into: Title, Summary, Questions, Decisions, Actions, and Tags
+* **User Dashboard**
+
+  * Displays all user meetings as clickable cards
+  * Client-side filtering by tag and substring search
+* **User Authentication**
+
+  * Email + password signup/login with email verification (Nodemailer)
+  * OAuth via Google & GitHub (via better-auth)
+* **Validation & Type Safety**
+
+  * Schema-based validation using Zod (frontend + backend)
+* **Responsive & Accessible UI**
+
+  * Styled using TailwindCSS and shadcn/ui
+* **Serverless & Scalable**
+
+  * Deployed on Vercel with Postgres + Prisma ORM
+
+---
+
+## Tech Stack
+
+| Area             | Tech                                                             |
+| ---------------- | ---------------------------------------------------------------- |
+| **Frontend**     | Next.js, React, TypeScript, TailwindCSS, shadcn/ui               |
+| **State & Data** | React Query, Zod, React Hook Form                                |
+| **Backend**      | API Routes (Next.js), OpenRouter (Mistral 3.2), Prisma ORM       |
+| **Database**     | PostgreSQL                                                       |
+| **Auth**         | better-auth, Nodemailer, OAuth (Google, GitHub)                  |
+| **Deployment**   | Vercel                                                           |
+
+---
+
+## Folder Structure
+
+```
+/app                # Next.js app directory
+/actions            # Auth + nodemailer api actions
+/components         # Shared UI components
+/app/api            # API routes (auth, summarization, meetings)
+/lib                # Utility functions (auth, openrouter. prisma, nodemailer)
+/hooks              # Hooks for api calling using react query
+./prisma            # Prisma schema and migrations
+/types              # Shared TypeScript types
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Challenges Faced
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+* **Structured outputs from Mistral via OpenRouter** — crafting prompts to return consistent JSON from Mistral required fine-tuning, especially on longer or messy transcripts.
+* **Dashboard filtering** — building performant client-side filtering for both text and tags.
+* **Handling unstructured input** — ensuring robustness when users upload poor-quality PDFs or poorly formatted text.
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## Future Improvements
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+* Support multiple file types (e.g. `.docx`, `.txt`)
+* Add tag suggestions based on content
+* Export summaries to PDF or markdown
+* Add role-based access or teams
+* Test coverage (unit & integration tests)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## Conclusion
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+SummitAi was a deep dive into structured AI outputs, fullstack development, and user-centered UX. It combines LLM-powered processing with practical user tools, all built on a modern web stack. It taught me valuable lessons about handling dynamic, unstructured data and turning it into usable knowledge for users.
